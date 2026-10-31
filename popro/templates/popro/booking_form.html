@@ -1,0 +1,16 @@
+{% extends "popro/base.html" %}
+{% block title %}Нове бронювання{% endblock %}
+{% block content %}
+<h2>Нове бронювання</h2>
+<p>Після надсилання форми на вашу пошту прийде посилання для підтвердження.</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {{ field.errors }}
+    {% endfor %}
+    <button type="submit">Надіслати запит</button>
+</form>
+{% endblock %}

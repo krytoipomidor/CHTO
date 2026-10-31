@@ -1,0 +1,7 @@
+{% extends "popro/base.html" %}
+{% block title %}Запит надіслано{% endblock %}
+{% block content %}
+<h2>Запит надіслано</h2>
+<p>Бронювання кімнати «{{ booking.room }}» створено зі статусом «{{ booking.get_status_display }}».</p>
+<p>Перевірте пошту {{ booking.customer_email }} та перейдіть за посиланням підтвердження.</p>
+{% endblock %}

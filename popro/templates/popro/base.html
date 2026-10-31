@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Бронювання кімнат{% endblock %}</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #17243b;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --brand: #4f46e5;
+            --brand-dark: #3730a3;
+            --surface: #fff;
+            --background: #f5f7fb;
+            --shadow: 0 12px 32px rgb(23 36 59 / 7%);
+        }
+        * { box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 2.5rem 1.25rem 4rem;
+            background: radial-gradient(ellipse at 50% 0, #e8eaff 0, var(--background) 48rem);
+            color: var(--ink);
+            font: 16px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif;
+        }
+        body > header, body > h2, body > form, body > article, body > p, body > h3 {
+            max-width: 900px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        a { color: var(--brand-dark); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+        a:hover { color: var(--brand); }
+        header { margin: 0 auto 2.5rem; max-width: 900px; }
+        header h1 { margin: 0 0 1.25rem; font-size: clamp(1.8rem, 5vw, 2.6rem); letter-spacing: -.045em; }
+        header h1 a { color: var(--ink); text-decoration: none; }
+        nav { display: flex; flex-wrap: wrap; gap: .55rem; }
+        nav a {
+            padding: .45rem .8rem;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgb(255 255 255 / 75%);
+            font-size: .92rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: border-color .15s, background .15s, transform .15s;
+        }
+        nav a:hover { transform: translateY(-1px); border-color: #c7d2fe; background: #eef2ff; }
+        h2 { margin-top: 0; font-size: clamp(1.5rem, 4vw, 2rem); letter-spacing: -.03em; }
+        h3 { margin-top: 0; letter-spacing: -.015em; }
+        .card, form {
+            margin-bottom: 1.25rem;
+            padding: clamp(1.1rem, 3vw, 1.6rem);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+        .card { transition: transform .18s ease, box-shadow .18s ease; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 16px 38px rgb(23 36 59 / 11%); }
+        .card h3 { margin-bottom: .35rem; font-size: 1.25rem; }
+        .card p { margin: .45rem 0 1rem; color: var(--muted); }
+        label { display: block; margin-top: .85rem; font-weight: 650; }
+        input, select, textarea {
+            display: block;
+            width: 100%;
+            margin-top: .3rem;
+            padding: .7rem .8rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            background: #fff;
+            color: var(--ink);
+            font: inherit;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--brand);
+            outline: 3px solid rgb(79 70 229 / 15%);
+        }
+        button {
+            margin-top: 1rem;
+            padding: .7rem 1.1rem;
+            border: 0;
+            border-radius: 9px;
+            background: var(--brand);
+            color: #fff;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .15s, transform .15s;
+        }
+        button:hover { transform: translateY(-1px); background: var(--brand-dark); }
+        button:focus-visible, a:focus-visible { outline: 3px solid #a5b4fc; outline-offset: 3px; }
+        .errorlist { margin: .3rem 0; padding-left: 1.2rem; color: #b42318; }
+        .muted { color: var(--muted); }
+        @media (max-width: 600px) {
+            body { padding: 1.5rem 1rem 3rem; }
+            header { margin-bottom: 1.8rem; }
+            nav { gap: .4rem; }
+            nav a { padding: .4rem .65rem; }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'popro:room_list' %}">Бронювання кімнат</a></h1>
+        <nav><a href="{% url 'popro:room_list' %}">Кімнати</a> · <a href="{% url 'popro:create_booking' %}">Забронювати</a> · <a href="{% url 'admin:index' %}">Адмін-панель</a></nav>
+    </header>
+    {% block content %}{% endblock %}
+</body>
+</html>

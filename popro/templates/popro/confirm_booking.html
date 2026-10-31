@@ -1,0 +1,11 @@
+{% extends "popro/base.html" %}
+{% block title %}Підтвердження бронювання{% endblock %}
+{% block content %}
+<h2>Підтвердження бронювання</h2>
+{% if booking.status == 'pending' %}
+    <p>Підтвердити бронювання кімнати «{{ booking.room }}» з {{ booking.start_at }} до {{ booking.end_at }}?</p>
+    <form method="post">{% csrf_token %}<button type="submit">Підтвердити бронювання</button></form>
+{% else %}
+    <p>Поточний статус бронювання: {{ booking.get_status_display }}.</p>
+{% endif %}
+{% endblock %}

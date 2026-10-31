@@ -1,0 +1,62 @@
+{% extends "popro/base.html" %}
+{% block title %}Кімнати — бронювання{% endblock %}
+{% block content %}
+<h2>Доступні кімнати</h2>
+<form method="get" id="availability-form">
+    <h3>Перевірити доступність</h3>
+    {{ form.non_field_errors }}
+    {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {{ field.errors }}
+    {% endfor %}
+    <button type="submit">Знайти кімнати</button>
+    <p id="live-availability" class="muted" aria-live="polite"></p>
+</form>
+{% for room in rooms %}
+    <article class="card">
+        <h3>{{ room.name }}</h3>
+        <p>{{ room.room_type }} · Місткість: {{ room.capacity }} · {{ room.price_per_hour }} грн/год</p>
+        {% if room.features %}<p>{{ room.features|linebreaksbr }}</p>{% endif %}
+        <a href="{% url 'popro:create_booking' %}?room={{ room.pk }}">Забронювати</a>
+    </article>
+{% empty %}
+    <p>За вибраними критеріями вільних кімнат немає.</p>
+{% endfor %}
+{% if occupied_bookings %}
+    <h3>Зайняті періоди у вибраному проміжку</h3>
+    {% for booking in occupied_bookings %}
+        <p>{{ booking.room }}: {{ booking.start_at }} — {{ booking.end_at }}</p>
+    {% endfor %}
+{% endif %}
+<script>
+(() => {
+    const form = document.getElementById('availability-form');
+    const start = document.getElementById('id_start_at');
+    const end = document.getElementById('id_end_at');
+    const type = document.getElementById('id_room_type');
+    const output = document.getElementById('live-availability');
+    let request;
+    async function checkAvailability() {
+        if (!start.value || !end.value) {
+            output.textContent = '';
+            return;
+        }
+        if (request) request.abort();
+        request = new AbortController();
+        const params = new URLSearchParams({start_at: start.value, end_at: end.value});
+        if (type.value) params.set('room_type', type.value);
+        try {
+            const response = await fetch(`{% url 'popro:availability' %}?${params}`, {signal: request.signal});
+            const data = await response.json();
+            output.textContent = response.ok
+                ? `Вільних кімнат: ${data.available_rooms.length}${data.available_rooms.length ? ` — ${data.available_rooms.map(room => room.name).join(', ')}` : ''}`
+                : data.error;
+        } catch (error) {
+            if (error.name !== 'AbortError') output.textContent = 'Не вдалося перевірити доступність.';
+        }
+    }
+    [start, end, type].forEach(field => field.addEventListener('change', checkAvailability));
+})();
+</script>
+{% endblock %}
