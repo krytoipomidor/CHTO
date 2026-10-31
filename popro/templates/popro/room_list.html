@@ -1,33 +1,52 @@
 {% extends "popro/base.html" %}
-{% block title %}Кімнати — бронювання{% endblock %}
+{% block title %}Затишно — кімнати для ваших планів{% endblock %}
 {% block content %}
-<h2>Доступні кімнати</h2>
-<form method="get" id="availability-form">
-    <h3>Перевірити доступність</h3>
+<section class="intro">
+    <p class="eyebrow">Ваш простір для зустрічей і задумів</p>
+    <h2>Знайдімо місце, де все складеться</h2>
+    <p>Оберіть кімнату для зустрічі, роботи чи особливої події. Перегляньте варіанти й перевірте вільний час — без зайвих кроків.</p>
+</section>
+<form method="get" id="availability-form" class="filter-card">
+    <h2>Коли вам зручно?</h2>
+    <p>Залиште час порожнім, якщо поки просто придивляєтесь.</p>
     {{ form.non_field_errors }}
-    {% for field in form %}
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {{ field }}
-        {{ field.errors }}
-    {% endfor %}
-    <button type="submit">Знайти кімнати</button>
+    <div class="filter-grid">
+        {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+    </div>
+    <button type="submit">Показати кімнати</button>
     <p id="live-availability" class="muted" aria-live="polite"></p>
 </form>
-{% for room in rooms %}
-    <article class="card">
-        <h3>{{ room.name }}</h3>
-        <p>{{ room.room_type }} · Місткість: {{ room.capacity }} · {{ room.price_per_hour }} грн/год</p>
-        {% if room.features %}<p>{{ room.features|linebreaksbr }}</p>{% endif %}
-        <a href="{% url 'popro:create_booking' %}?room={{ room.pk }}">Забронювати</a>
-    </article>
-{% empty %}
-    <p>За вибраними критеріями вільних кімнат немає.</p>
-{% endfor %}
-{% if occupied_bookings %}
-    <h3>Зайняті періоди у вибраному проміжку</h3>
-    {% for booking in occupied_bookings %}
-        <p>{{ booking.room }}: {{ booking.start_at }} — {{ booking.end_at }}</p>
+<div class="section-heading">
+    <h2>Кімнати, які можуть вам підійти</h2>
+    <p>Затишні простори для справ, зустрічей та гарних ідей.</p>
+</div>
+<div class="room-grid">
+    {% for room in rooms %}
+        <article class="card">
+            <span class="room-type">{{ room.room_type }}</span>
+            <h3>{{ room.name }}</h3>
+            <p class="room-meta">Зручно для компанії до {{ room.capacity }} осіб</p>
+            {% if room.features %}<p>{{ room.features|linebreaksbr }}</p>{% endif %}
+            <p class="room-price">{{ room.price_per_hour }} грн <span class="muted">/ година</span></p>
+            <a class="button" href="{% url 'popro:create_booking' %}?room={{ room.pk }}">Обрати кімнату</a>
+        </article>
+    {% empty %}
+        <p class="empty-state">Поки не знайшлося вільних кімнат на цей час. Спробуйте змінити період або перегляньте кімнати без фільтра.</p>
     {% endfor %}
+</div>
+{% if occupied_bookings %}
+    <details class="notice">
+    <summary>Переглянути зайняті періоди</summary>
+    {% for booking in occupied_bookings %}
+        <p>{{ booking.room }} · {{ booking.start_at|date:"j E, H:i" }} — {{ booking.end_at|date:"H:i" }}</p>
+    {% endfor %}
+    </details>
 {% endif %}
 <script>
 (() => {

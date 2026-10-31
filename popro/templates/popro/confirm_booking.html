@@ -1,11 +1,15 @@
 {% extends "popro/base.html" %}
-{% block title %}Підтвердження бронювання{% endblock %}
+{% block title %}Підтвердження — Затишно{% endblock %}
 {% block content %}
-<h2>Підтвердження бронювання</h2>
+<section class="card form-panel">
+<p class="eyebrow">Останній крок</p>
+<h2>Підтвердити бронювання?</h2>
 {% if booking.status == 'pending' %}
-    <p>Підтвердити бронювання кімнати «{{ booking.room }}» з {{ booking.start_at }} до {{ booking.end_at }}?</p>
-    <form method="post">{% csrf_token %}<button type="submit">Підтвердити бронювання</button></form>
+    <p>Кімната <strong>«{{ booking.room }}»</strong></p>
+    <p class="muted">{{ booking.start_at|date:"j E Y, H:i" }} — {{ booking.end_at|date:"H:i" }}</p>
+    <form method="post" class="unstyled-form">{% csrf_token %}<button type="submit">Так, підтвердити</button></form>
 {% else %}
-    <p>Поточний статус бронювання: {{ booking.get_status_display }}.</p>
+    <p>Статус цього бронювання: {{ booking.get_status_display }}.</p>
 {% endif %}
+</section>
 {% endblock %}

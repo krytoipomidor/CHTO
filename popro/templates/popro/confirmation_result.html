@@ -1,3 +1,9 @@
 {% extends "popro/base.html" %}
-{% block title %}Результат підтвердження{% endblock %}
-{% block content %}<p>{{ message }}</p>{% endblock %}
+{% block title %}Інформація про бронювання — Затишно{% endblock %}
+{% block content %}
+<section class="card form-panel">
+    <h2>Інформація про бронювання</h2>
+    <p>{{ message }}</p>
+    <a class="button" href="{% url 'popro:room_list' %}">Переглянути кімнати</a>
+</section>
+{% endblock %}
